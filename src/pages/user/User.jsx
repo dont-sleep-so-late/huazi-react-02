@@ -256,6 +256,7 @@ const User = () => {
           <Button
             onClick={() => {
               searchForm.resetFields();
+              setCheckedList([]);
             }}
           >
             重置

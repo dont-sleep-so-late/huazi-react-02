@@ -5,22 +5,6 @@ Mock.setup({
   timeout: "2000-6000",
 });
 
-// get请求从config.url获取参数，post从config.body中获取参数
-function param2Obj(url) {
-  const search = url.split("?")[1];
-  if (!search) {
-    return {};
-  }
-  return JSON.parse(
-    '{"' +
-      decodeURIComponent(search)
-        .replace(/"/g, '\\"')
-        .replace(/&/g, '","')
-        .replace(/=/g, '":"') +
-      '"}'
-  );
-}
-
 let List = [
   {
     id: 1,
@@ -151,17 +135,13 @@ Mock.mock(/home\/getData/, "get", () => {
   };
 });
 
-Mock.mock(/user\/getUser/, "get", (config) => {
-  console.log("config", config);
-  const { name, page = 1, limit = 10 } = param2Obj(config.url);
+Mock.mock(/user\/getUser/, "post", ({ body }) => {
+  const { name, role, region, page = 1, limit = 10 } = JSON.parse(body);
+
   const mockList = List.filter((user) => {
-    if (
-      name &&
-      user.name.indexOf(name) === -1 &&
-      user.role.indexOf(name) === -1 &&
-      user.region.indexOf(name) === -1
-    )
-      return false;
+    if (name && user.name.indexOf(name) === -1) return false;
+    if (role && user.role.indexOf(role) === -1) return false;
+    if (region && user.region.indexOf(region) === -1) return false;
     return true;
   });
   const pageList = mockList.filter(

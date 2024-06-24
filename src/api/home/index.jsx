@@ -8,11 +8,12 @@ export const getEchartData = () => {
   return request.get("/home/getEchartData");
 };
 
-export const getUser = (params) => {
+export const getUser = (data) => {
   return request.request({
     url: "/user/getUser",
-    method: "get",
-    params,
+    method: "post",
+    //body传参
+    data
   });
 };
 export const addUser = (params) => {
